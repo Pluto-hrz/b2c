@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订单生成页</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <nav class="navbar navbar-default">
+   <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+        <a class="navbar-brand" href="{% url 'buyer:home' %}">购物网</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li role="presentation"><a href="{% url 'buyer:home' %}">首页</a></li>
+        <li role="presentation"><a href="{% url 'buyer:index_buyer' %}">个人中心</a></li>
+        <li role="presentation"><a href="{% url 'buyer:buy_car' %}">购物车</a></li>
+        <li role="presentation"><a href="{% url 'user:correct_password' %}">修改密码</a></li>
+        <li role="presentation"><a href="{% url 'user:logout' %}">退出登录</a></li>
+        <li role="presentation"><a href="{% url 'user:money' %}">余额充值</a></li>
+    </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+</head>
+<body>
+
+<div class = "container page_header">
+     <h1 style="color: green">
+         订单交易页面
+     </h1>
+    <h1>
+
+    </h1>
+</div>
+<div class="container body-main">
+<div class="col-md-9">
+<div class="row">
+  <div class="col-sm-4 col-md-3">
+    <div class="thumbnail">
+      <img src="data:image/jpeg;base64,{{ user.image }}" alt="" height="150" width="150">
+    </div>
+  </div>
+    <div class="col-sm-4 col-md-9">
+    <div class="thumbnail">
+      <div class="caption">
+          <h4 style="color: gray">收件人：{{ user.username }}</h4>
+          <h4 style="color: gray">邮  箱：{{ user.email }}</h4>
+          <h4>
+              <span class="label label-info">账户余额：{{ user.money }}</span>
+              <a> </a>
+              <span class="label label-warning">注册时间：{{ user.create_time }}</span>
+          </h4>
+      </div>
+    </div>
+  </div>
+    <div>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="thumbnail">
+                <div class="caption">
+                    <h4 style="color: gray">收件人电话：{{ user.mobile }}</h4>
+                    <h3 style="color: gray">收件人地址：{{ user.address }}</h3>
+                    <h4>
+                        <span class="label label-info">账户余额：{{ user.money }}</span>
+                        <a> </a>
+                        <span class="label label-warning">注册时间：{{ user.create_time }}</span>
+                    </h4>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+            <div class="col-md-12">
+            <div class="row">
+                    <div class="thumbnail">
+                    <div class="caption">
+                        <div>
+                            <a href="/buyer/thing/{{ t.id }}/">
+                                <img height="250" width="280" src="data:image/jpeg;base64,{{ t.photo }}">
+                            </a>
+                        </div>
+                        <p>
+                            <h2 style="color: green">{{ t.name }} </h2>
+                            <h2 style="color:gold"> ￥{{ t.price }}</h2>
+                        </p>
+                        <h3 style="color: gray">{{ t.introduce }}</h3>
+                        <h3>
+                            <span class="label label-info">商家：{{ t.seller.username }}</span>
+                            <a> </a>
+                            <span class="label label-warning">销量：{{ t.xiaoliang }}</span>
+                            <a> </a>
+                            <span class="label label-warning">库存：{{ t.spare }}</span>
+                        </h3>
+                        <h3>标签：
+                            {% for tag in tags %}
+                            <span class="label label-success"> {{ tag.tag }} </span> <a> </a>
+                            {% endfor %}
+                        </h3>
+                    </div>
+                    </div>
+                    <form action="/buyer/order_add/{{ thing_id }}/{{ num }}/" method="post">
+                        {% csrf_token %}
+                        <input type="text" value="{{ comment.comment }}" name="comment" style="display: none">
+                        <input type="text" value="{{ thing.id }}" name="thing_id" style="display: none">
+                        <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="number" min="1" max="999" class="form-control" value="{{ num }}" name="num" id="input_num">
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p style="color:red;"><button type="submit" class="btn btn-success">提交订单</button>  {{ result }}</p>
+
+                        </div>
+                    </form>
+            </div>
+            </div>
+    </div>
+</div>
+</div>
+</div>
+
+</div>
+
+</body>
+</html>

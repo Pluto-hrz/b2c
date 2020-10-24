@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <nav class="navbar navbar-default">
+   <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="{% url 'buyer:home' %}">购物网</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li role="presentation"><a href="{% url 'buyer:home' %}">首页</a></li>
+        <li role="presentation" class="active"><a href="{% url 'buyer:index_buyer' %}">个人中心</a></li>
+        <li role="presentation"><a href="{% url 'buyer:buy_car' %}">购物车</a></li>
+        <li role="presentation"><a href="{% url 'user:correct_password' %}">修改密码</a></li>
+        <li role="presentation"><a href="{% url 'user:logout' %}">退出登录</a></li>
+        <li role="presentation"><a href="{% url 'user:money' %}">余额充值</a></li>
+    </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+</head>
+<body>
+
+<div class = "container page_header">
+     <h1 style="color: orange">
+         个人中心
+     </h1>
+    <h1>
+
+    </h1>
+</div>
+<div class="container body-main">
+<div class="col-md-9">
+<div class="row">
+  <div class="col-sm-4 col-md-3">
+    <div class="thumbnail">
+      <a href="{% url 'user:user_correct' %}">
+      <img src="data:image/jpeg;base64,{{ user.image }}" alt="" height="150" width="150">
+        </a>
+    </div>
+  </div>
+    <div class="col-sm-4 col-md-9">
+    <div class="thumbnail">
+      <div class="caption">
+          <a href="{% url 'user:user_correct' %}">
+              <h4 style="color: gray">用户名：{{ user.username }}</h4>
+              <h4 style="color: gray">邮  箱：{{ user.email }}</h4>
+          </a>
+          <h4>
+              <span class="label label-info">账户余额：{{ user.money }}</span>
+              <a> </a>
+              <span class="label label-warning">注册时间：{{ user.create_time }}</span>
+          </h4>
+      </div>
+    </div>
+  </div>
+    <div>
+        <h3 style="color:cornflowerblue">我的订单</h3>
+        {% for i in orders %}
+            <div class="col-sm-4 col-md-3">
+            <div class="thumbnail">
+                <img src="data:image/jpeg;base64,{{ i.thing_photo }}" alt="" height="150" width="150">
+            </div>
+            </div>
+            <div class="col-sm-4 col-md-7">
+            <div class="thumbnail">
+            <div class="caption">
+          <h4 style="color: gray">商品：{{ i.thing_name }}</h4>
+          <h4 style="color: gray">卖家：{{ i.seller_name }}</h4>
+          <h4>
+              <span class="label label-info">商品价格：{{ i.one_price }}</span>
+              <a> </a>
+              <span class="label label-warning">购买数量：{{ i.num }}</span>
+              <a> </a>
+              <span class="label label-primary">订单总价：{{ i.all_price }}</span>
+          </h4>
+          <h4>
+              {% if i.state == '订单待处理' %}
+                    <span class="label label-info">交易状态：{{ i.state }}</span>
+                    <a> </a>
+                    <span class="label label-default">创建时间：{{ i.create_time }}</span>
+              {% endif %}
+              {% if i.state == '交易成功' %}
+                    <span class="label label-success">交易状态：{{ i.state }}</span>
+                    <a> </a>
+                    <span class="label label-default">创建时间：{{ i.create_time }}</span>
+              {% endif %}
+              {% if i.state == '交易失败' %}
+                    <span class="label label-danger">交易状态：{{ i.state }}</span>
+                    <a> </a>
+                    <span class="label label-default">创建时间：{{ i.create_time }}</span>
+              {% endif %}
+          </h4>
+           </div>
+           </div>
+           </div>
+            {% if i.state == '订单待处理' %}
+            <div class="col-sm-4 col-md-2">
+                <div class="thumbnail">
+                    <p> </p>
+                    <form action="/buyer/order_add/{{ i.thing_id }}/{{ i.num }}/">
+                    {% csrf_token %}
+                        <button type="submit" class="btn btn-success">再买一单</button>
+                    </form>
+                    <p> </p>
+                    <form action="{% url 'seller:order_unsuccess' %}" method="post">
+                    {% csrf_token %}
+                        <input type="text" value="{{ i.id }}" name="order_id" id="input_order_id" style="display: none">
+                        <button type="submit" class="btn btn-danger">取消订单</button>
+                    </form>
+                    <p> </p>
+                    <form action="/buyer/thing/{{ i.thing_id }}/">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-info">查看商品</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if i.state == '交易成功' %}
+            <div class="col-sm-4 col-md-2">
+            <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575975316612&di=45c9b0db74269348b72004bec7de86d3&imgtype=0&src=http%3A%2F%2Fws1.sinaimg.cn%2Flarge%2F005GOaLIgy1fysa5cds82j306o06owef.jpg" height="150" width="100">
+            </div>
+            {% endif %}
+
+            {% if i.state == '交易失败' %}
+            <div class="col-sm-4 col-md-2">
+            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=800898598,1605211027&fm=15&gp=0.jpg" height="150" width="100">
+            </div>
+            {% endif %}
+
+            <div class="col-sm-4 col-md-12">
+                <p> </p>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+</div>
+<div class="col-md-3">
+<div class="row">
+<h3 style="color:cornflowerblue">商品推荐</h3>
+{% for thing in things %}
+  {% if thing.state == 1 %}
+  <div class="col-sm-6 col-md-12">
+    <div class="thumbnail">
+        <a href="/buyer/thing/{{ thing.id }}/">
+      <img height="250" width="280" src="data:image/jpeg;base64,{{ thing.photo }}">
+        </a>
+      <div class="caption">
+        <h3 style="color: orange">￥{{ thing.price }}【包邮】</h3>
+          <h4><span class="label label-info">销量：{{ thing.xiaoliang }}</span><a> </a><span class="label label-warning">库存：{{ thing.spare }}</span></h4>
+        <p>{{ thing.name }}:{{ thing.introduce }} </p>
+          <form action="{% url 'buyer:buy_car_add' %}" method="post">
+              {% csrf_token %}
+              <input id="input_thing_id" value="{{ thing.id }}" style="display: none" name="thing_id">
+              <input id="input_num" value="1" style="display: none" name="num">
+              <p>
+                  <a href="/buyer/order_add/{{ thing.id }}/1/" class="btn btn-primary" role="button">立即购买</a>
+                  <button type="submit" class="btn btn-default">加入购物车</button>
+              </p>
+          </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+{% endfor %}
+</div>
+</div>
+</body>
+</html>

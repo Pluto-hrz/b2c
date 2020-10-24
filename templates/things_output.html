@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品发布页</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+     <nav class="navbar navbar-default">
+   <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+        <a class="navbar-brand" href="{% url 'buyer:home' %}">购物网</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+         <li role="presentation"><a href="{% url 'buyer:home' %}">首页</a></li>
+         <li role="presentation"><a href="{% url 'seller:index_seller' %}">个人中心</a></li>
+         <li role="presentation"><a href="{% url 'user:correct_password' %}">修改密码</a></li>
+         <li role="presentation"><a href="{% url 'user:logout' %}">退出登录</a></li>
+         <li role="presentation" class="active"><a href="{% url 'seller:things_output' %}">发布商品</a></li>
+         <li role="presentation"><a href="{% url 'seller:things_manage' %}">商品管理</a></li>
+    </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+</head>
+<body>
+<h1>
+
+</h1>
+<div class="container body-main">
+    <div class="col-md-6">
+            <p>  </p>
+    </div>
+</div>
+<div class="container body-main">
+    <div class="col-md-4">
+        <form action="{% url 'seller:things_output' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {# 商品名称 #}
+            <div class="form-group">
+                <label for="exampleInputUsername">商品名称</label>
+                <input type="text" class="form-control" id="input_name" placeholder="商品名称" name="name">
+            </div>
+           {# 商品简介 #}
+            <div class="ibox-content no-padding">
+            <div>
+                 <label for="exampleInputPassword">商品简介</label>
+                 <input type="text" class="form-control" id="input_password" placeholder="商品简介" name="introduce">
+            </div>
+            </div>
+            {# 商品价格 #}
+            <div class="form-group">
+                <label for="exampleInputEmail1">商品价格</label>
+                <input type="text" class="form-control" id="input_price" placeholder="商品价格" name="price">
+            </div>
+            {# 商品库存 #}
+            <div class="form-group">
+                <label for="exampleInputEmail1">商品库存</label>
+                <input type="number" min="0" class="form-control" id="input_spare" placeholder="商品库存" name="spare">
+            </div>
+            {# 商品展示图 #}
+            <div class="form-group">
+                <label for="exampleInputFile">上传头像</label>
+                <input type="file" id="exampleInputFile" name="photo" >
+            </div>
+            {# 商品状态 #}
+            <div class="checkbox">
+                <label>
+                <input name="character" type="checkbox" checked="">立即上架
+                </label>
+            </div>
+            <button type="submit" class="btn btn-default">发布</button>
+            <p style="color: red">{{ result }}</p>
+        </form>
+    </div>
+</div>
+<div class="container body-main">
+    <div class="col-md-4">
+         <p>  </p>
+    </div>
+</div>
+</body>
+</html>
